@@ -13,7 +13,7 @@ export async function getOrderProducts(orderId?: string, articleId?: string): Pr
     if (!where.articleId) {
         delete where.articleId;
     }
-    const events = await OrderEventModel.find(where).sort({ createdAt: -1 });
+    const events = await OrderEventModel.find(where).sort({ createdAt: -1 }).limit(10);
     const products = new Map<string, OrderProduct>()
     events.forEach((event) => {
         if (event.type === 'newProductOrder') {
