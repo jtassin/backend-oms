@@ -1,0 +1,1 @@
+ts-node-dev --no-notify src/index.js
