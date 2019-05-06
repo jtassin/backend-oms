@@ -1,6 +1,6 @@
 import { OrderProduct } from "../dto/OrderProduct";
 import { OrderEventModel, OrderEvent } from "../dao/OrderEvent";
-// import { NEW_EVENT, pubsub } from "../pubsub";
+import { NEW_ORDERPRODUCT, pubsub } from "../pubsub";
 
 export async function getOrderProducts(orderId?: string, articleId?: string): Promise<OrderProduct[]> {
     const where = {
@@ -33,10 +33,10 @@ export async function addNewProductOrder(articleId: string, orderId: string): Pr
         userId: 'me',
         articleId, orderId, type: 'newProductOrder', state: 'toPrepare'
     })
-    // pubsub.publish(NEW_EVENT, { event})
-    // pubsub.publish(NEW_EVENT, { id: 5})
-    console.log('published', event)
     await event.save();
     const results = await getOrderProducts(orderId, articleId)
-    return { orderProduct: results[0], event }
+    const orderProduct = results[0];
+    await pubsub.publish(NEW_ORDERPRODUCT, orderProduct)
+
+    return { orderProduct, event }
 }

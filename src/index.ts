@@ -5,12 +5,13 @@ const http = require('http');
 const { ApolloServer } = require('apollo-server-fastify');
 const { OrderResolvers } = require('./graphql/resolvers');
 import { buildSchema } from 'type-graphql';
+import { pubsub } from "./pubsub";
 const PORT = 4000;
 
 const app = require('fastify')();
 
 (async function () {
-    const schema = await buildSchema({ resolvers: [OrderResolvers] })
+    const schema = await buildSchema({ resolvers: [OrderResolvers], pubSub: pubsub })
     const server = new ApolloServer({
         schema,
         resolvers: [OrderResolvers],

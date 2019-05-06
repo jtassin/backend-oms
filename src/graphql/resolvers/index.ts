@@ -1,10 +1,9 @@
-import { Resolver, Query, Subscription, Mutation, Root, Args, PubSub } from 'type-graphql';
-import { PubSubEngine } from "graphql-subscriptions";
+import { Resolver, Query, Subscription, Mutation, Root, Args } from 'type-graphql';
 import { Order } from '../../dto/Order';
 import { OrderProduct } from '../../dto/OrderProduct';
 import { getOrderProducts, addNewProductOrder } from '../../services/orderProduct';
 import { AddProductArg } from '../../dto/AddProduct';
-import { NEW_EVENT } from "../../pubsub";
+import { NEW_ORDERPRODUCT } from "../../pubsub";
 
 @Resolver(Order)
 export class OrderResolvers {
@@ -15,15 +14,13 @@ export class OrderResolvers {
   }
 
   @Mutation(_returns => OrderProduct)
-  async addOrderProduct(@Args() { articleId, orderId }: AddProductArg, @PubSub() pubSub: PubSubEngine) {
+  async addOrderProduct(@Args() { articleId, orderId }: AddProductArg) {
     const res = await addNewProductOrder(articleId, orderId)
-    await pubSub.publish(NEW_EVENT, res.orderProduct);
     return res.orderProduct;
   }
 
   @Subscription({
-    topics: NEW_EVENT,
-    // _returns => OrderProduct
+    topics: NEW_ORDERPRODUCT,
   })
   newOrderProduct(@Root() orderProduct: OrderProduct): OrderProduct {
     console.log('newOrderProduct', orderProduct)

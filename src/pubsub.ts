@@ -5,11 +5,4 @@ export const pubsub = new RedisPubSub();
 // export const pubsub = new PubSub();
 
 
-export const NEW_EVENT = '@newEvent';
-
-// pubsub.subscribe(() => {
-
-// })
-
-// const a = pubsub.asyncIterator([NEW_EVENT])
-// console.log(a)
+export const NEW_ORDERPRODUCT = '@oms-orderProduct-new';
