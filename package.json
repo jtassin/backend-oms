@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest src"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@keplr/backend-auth": "^3.5.1",
     "@types/graphql": "^14.2.0",
     "@types/ioredis": "^4.0.10",
+    "@types/jest": "^24.0.12",
     "@types/mongoose": "^5.3.27",
     "apollo-server": "^2.4.8",
     "apollo-server-fastify": "^2.4.8",
@@ -25,7 +27,11 @@
     "type-graphql": "^0.17.3"
   },
   "devDependencies": {
+    "@types/shortid": "0.0.29",
+    "jest": "^24.8.0",
     "pm2": "^3.5.0",
+    "shortid": "^2.2.14",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.1.0",
     "ts-node-dev": "^1.0.0-pre.35",
     "typescript": "^3.4.5"

@@ -1,44 +1,19 @@
-import "reflect-metadata";
 const http = require('http');
+import {app, runServer } from './server';
 
-// import { buildSchema } from "graphql";
-const { ApolloServer } = require('apollo-server-fastify');
-const { OrderResolvers } = require('./graphql/resolvers');
-import { buildSchema } from 'type-graphql';
-import { pubsub } from "./pubsub";
 const PORT = 4000;
 
-const app = require('fastify')();
 
-(async function () {
-    const schema = await buildSchema({ resolvers: [OrderResolvers], pubSub: pubsub })
-    const server = new ApolloServer({
-        schema,
-        resolvers: [OrderResolvers],
-        playground: true,
-        subscriptions: {
-            // path: "/subscriptions",
-
-            onConnect: () => {
-                console.log('let s go party')
-            }
-        }
-    });
-    app.register(server.createHandler());
+async function run() {
+    const server = await runServer()
     await app.listen(PORT);
-
     const wsServer = http.createServer(() => {
     });
-
-    wsServer.listen(4001);
-
-    // const httpServer = http.createServer(app);
-    // console.log(httpServer)
+    
+    await wsServer.listen(4001);
     server.installSubscriptionHandlers(wsServer);
-    // server.installSubscriptionHandlers(httpServer);
-
-    // console.log(server)
-    console.log('come on barbie !')
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
     console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`)
-})();
+}
+
+run();
