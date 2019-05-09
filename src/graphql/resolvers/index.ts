@@ -11,13 +11,12 @@ import { Context } from '../../context';
 export class OrderResolvers {
 
   @Query(_returns => [OrderProduct])
-  async listOrderProducts(_arg: any, @Ctx() ctx: Context) {
-    console.log('ctx is', ctx)
+  async listOrderProducts(@Ctx() ctx: Context) {
     return getOrderProducts()
   }
 
   @Mutation(_returns => OrderProduct)
-  async addOrderProduct(@Args() { articleId, orderId }: AddProductArg) {
+  async addOrderProduct(@Args() { articleId, orderId }: AddProductArg, @Ctx() ctx: Context) {
     const res = await addNewProductOrder(articleId, orderId)
     return res.orderProduct;
   }

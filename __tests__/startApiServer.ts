@@ -19,8 +19,13 @@ function generateRnd() {
 let instance: any;
 
 export async function destroy() {
-  console.log('kill')
-  instance.close()
+  console.log('closing')
+  return new Promise((resolve) => {
+    instance.close(() => {
+      resolve()
+      console.log('closed')
+    })
+  })
 }
 
 
@@ -69,7 +74,7 @@ export async function startApiServer() {
 
   return {
     destroy: () => {
-app.stop();
+app.close();
     },
     accountSlug: account,
     fastify: apiServer,

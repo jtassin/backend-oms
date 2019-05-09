@@ -12,15 +12,37 @@ describe('e2e', () => {
         env = await startApiServer()
     })
 
-    afterAll(() => {
-        destroy()
+    afterAll(async () => {
+        await destroy()
     })
 
-    it('works', async () => {
+    it('can query', async () => {
         const payload = {
             operationName: null,
             query: "{listOrderProducts {id}}",
             variables: {}
+        }
+        const res = await env.asAdmin({
+            method: 'POST',
+            url: '/graphql',
+            payload,
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+        console.log(res.data)
+    })
+
+    it('can mutate', async () => {
+        const payload = {
+            operationName: null,
+            query: `mutation addOrderProduct($articleId: String!, $orderId: String!) {
+                addOrderProduct(articleId: $articleId, orderId: $orderId) {
+                  id
+                  state
+                }
+              }`,
+            variables: {articleId: '1', orderId: '6'}
         }
         const res = await env.asAdmin({
             method: 'POST',
