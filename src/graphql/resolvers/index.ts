@@ -24,7 +24,8 @@ export class OrderResolvers {
   @Subscription({
     topics: NEW_ORDERPRODUCT,
   })
-  newOrderProduct(@Root() orderProduct: OrderProduct): OrderProduct {
+  newOrderProduct(@Root() orderProduct: OrderProduct, @Ctx() ctx: Context): OrderProduct {
+    console.log('ctx sub', ctx)
     console.log('newOrderProduct', orderProduct)
     // TODO add filter here
     return orderProduct
