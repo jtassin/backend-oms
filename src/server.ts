@@ -6,6 +6,8 @@ const { OrderResolvers } = require('./graphql/resolvers');
 import { buildSchema } from 'type-graphql';
 import { pubsub } from "./pubsub";
 import { Context } from "./context";
+import * as mongoose from 'mongoose';
+import { FastifyInstance } from "fastify";
 
 // The use of fastify-plugin is required to be able to register hook globally
 const verifyAuth = require('./verifyAuth')
@@ -36,6 +38,15 @@ export async function runServer() {
         }
     });
     app.register(server.createHandler());
+    app.addHook('onClose', (_instance: FastifyInstance, done: () => void) => {
+        console.log('mongoose closing')
+        mongoose.disconnect()
+        mongoose.connection.close(() => {
+            console.log('mongoose closed')
+            pubsub.close()
+            done()
+        })
+    })
     return server;
 }
 
